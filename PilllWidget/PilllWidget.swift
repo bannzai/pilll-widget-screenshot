@@ -213,33 +213,34 @@ struct AccessoryCircularWidget: WidgetView {
     Group {
       switch entry.status {
       case let .pill(todayPillNumber, alreadyTaken):
-        HStack {
+        VStack {
+          Spacer().frame(height: 8)
+
           Image("pilll-widget-icon")
 
-
           if let todayPillNumber {
-            Text(displayTodayPillNumber(todayPillNumber: todayPillNumber, appearanceMode: .number))
-
-
-            if alreadyTaken {
-              Image("check-icon-on")
-                .resizable()
-                .frame(width: 18, height: 18)
+            HStack {
+              if alreadyTaken {
+                Image("check-icon-on")
+                  .resizable()
+                  .frame(width: 18, height: 18)
+              } else {
+                Text(displayTodayPillNumber(todayPillNumber: todayPillNumber, appearanceMode: entry.settingPillSheetAppearanceMode))
               }
-            Spacer()
+            }
           }
         }
-        .padding(.horizontal, 10)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.black)
       case .userIsNotPremiumOrTrial:
-        VStack {
+        VStack(spacing: 5) {
           Image("pilll-widget-icon")
-            .frame(width: 5.5, height: 8)
 
           Image(systemName: "xmark")
-            .font(.system(size: 9))
+            .font(.system(size: 14))
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.black)
       }
     }
   }
@@ -285,13 +286,19 @@ struct Widget_Previews: PreviewProvider {
   }
   static var previews: some View {
     AccessoryCircularWidget(entry: entry)
-      .previewContext(WidgetPreviewContext(family: .accessoryInline))
+      .previewContext(WidgetPreviewContext(family: .accessoryCircular))
     AccessoryCircularWidget(entry: {
       var copied = entry
       copied.pillSheetLastTakenDate = Date(timeIntervalSince1970: 0)
       return copied
     }())
-      .previewContext(WidgetPreviewContext(family: .accessoryInline))
+      .previewContext(WidgetPreviewContext(family: .accessoryCircular))
+    AccessoryCircularWidget(entry: {
+      var copied = entry
+      copied.userIsPremiumOrTrial = false
+      return copied
+    }())
+      .previewContext(WidgetPreviewContext(family: .accessoryCircular))
   }
 }
 
